@@ -28,12 +28,16 @@ class TicTacToeGUI:
         # Create the main application window
         self.root = tk.Tk()  # Initialize the main window
         self.root.title("Smart Tic-Tac-Toe with Minimax AI")  # Set window title
-        self.root.geometry("400x500")  # Set window size (width x height)
+        self.root.geometry("400x600")  # Set window size (increased height from 500 to 600)
         self.root.resizable(False, False)  # Prevent window resizing for consistent layout
         
         # Initialize the UI components
         self.setup_ui()  # Create all visual elements and layout
         
+        # Force window geometry and layout updates
+        self.root.update_idletasks()  # Force layout calculation
+        self.root.update()  # Force window update
+    
     def setup_ui(self):
         """Create and arrange all UI elements in the main window."""
         # Reason: Organize UI creation into separate method for better code structure
@@ -79,28 +83,42 @@ class TicTacToeGUI:
             self.buttons.append(button_row)  # Add completed row to main button list
         
         # Create control buttons frame
-        controls_frame = tk.Frame(self.root)  # Create container for control buttons
-        controls_frame.pack(pady=20)  # Add controls frame with vertical padding
+        controls_frame = tk.Frame(self.root, bg="lightgray", relief="raised", bd=2)  # Create container with visible background and border
+        controls_frame.pack(pady=20, fill="x", padx=20)  # Add controls frame with padding and fill horizontally
+        
+        # Add a label to identify the controls section
+        controls_label = tk.Label(  # Create label for controls section
+            controls_frame,  # Parent container is the controls frame
+            text="Game Controls",  # Label text
+            font=("Arial", 10, "bold"),  # Font styling
+            bg="lightgray",  # Background color matching frame
+            fg="darkblue"  # Text color
+        )
+        controls_label.pack(pady=(5, 10))  # Add label with vertical padding
         
         # Create restart button
         restart_button = tk.Button(  # Create button to restart the game
             controls_frame,  # Parent container is the controls frame
-            text="Restart Game",  # Button label text
+            text="Restart",  # Button label text - changed from "Restart Game" to "Restart"
             font=("Arial", 12, "bold"),  # Font styling
             bg="lightblue",  # Background color
+            width=12,  # Explicit width for better visibility
+            height=2,  # Explicit height for better visibility
             command=self.restart_game  # Function to call when clicked
         )
-        restart_button.pack(side=tk.LEFT, padx=10)  # Position button on left side
+        restart_button.pack(side=tk.LEFT, padx=15, pady=10)  # Position button on left with more padding
         
-        # Create quit button
-        quit_button = tk.Button(  # Create button to exit the application
+        # Create exit button
+        exit_button = tk.Button(  # Create button to exit the application
             controls_frame,  # Parent container is the controls frame
-            text="Quit",  # Button label text
+            text="Exit",  # Button label text - changed from "Quit" to "Exit"
             font=("Arial", 12, "bold"),  # Font styling
             bg="lightcoral",  # Background color
-            command=self.root.quit  # Function to call when clicked (quit app)
+            width=12,  # Explicit width for better visibility
+            height=2,  # Explicit height for better visibility
+            command=self.root.destroy  # Function to call when clicked - changed from quit to destroy
         )
-        quit_button.pack(side=tk.RIGHT, padx=10)  # Position button on right side
+        exit_button.pack(side=tk.RIGHT, padx=15, pady=10)  # Position button on right with more padding
     
     def player_move(self, row, col):
         """

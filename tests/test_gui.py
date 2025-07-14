@@ -67,7 +67,7 @@ class TestTicTacToeGUI:
             return  # Skip test if no display available
         
         assert self.app.root.title() == "Smart Tic-Tac-Toe with Minimax AI"  # Check window title
-        assert "400x500" in self.app.root.geometry()  # Check window size (position may vary)
+        assert "400x600" in self.app.root.geometry()  # Check window size (updated to 600 height for better layout)
         assert self.app.root.resizable()[0] == False  # Check that width is not resizable
         assert self.app.root.resizable()[1] == False  # Check that height is not resizable
     

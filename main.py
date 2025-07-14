@@ -120,6 +120,36 @@ class TicTacToeGUI:
         )
         exit_button.pack(side=tk.RIGHT, padx=15, pady=10)  # Position button on right with more padding
     
+    def disable_board(self):
+        """
+        Disable all game board buttons to prevent multiple moves during AI turn.
+        
+        This function is called immediately after a player's move to ensure
+        strict turn-based gameplay and prevent fast-clicking exploits.
+        """
+        # Reason: Prevent fast-clicking bug by disabling all board buttons during AI turn
+        # This ensures only one move per turn and maintains game integrity
+        
+        for row in range(3):  # Iterate through each row of buttons
+            for col in range(3):  # Iterate through each button in the row
+                self.buttons[row][col].config(state='disabled')  # Disable button to prevent clicks
+    
+    def enable_board(self):
+        """
+        Re-enable only empty game board buttons for the player's next turn.
+        
+        This function selectively enables only buttons that represent empty cells,
+        preventing players from clicking on already occupied squares.
+        """
+        # Reason: Selectively re-enable only empty cells after AI move completes
+        # This maintains game rules while allowing player to continue their turn
+        
+        for row in range(3):  # Iterate through each row of buttons
+            for col in range(3):  # Iterate through each button in the row
+                button_text = self.buttons[row][col].cget("text")  # Get current button text content
+                if button_text == "":  # Check if the cell is empty (no X or O)
+                    self.buttons[row][col].config(state='normal')  # Re-enable button for clicking
+    
     def player_move(self, row, col):
         """
         Handle player's move when a button is clicked.
@@ -142,18 +172,21 @@ class TicTacToeGUI:
         self.game.board[row][col] = 'X'  # Update game logic board state
         self.buttons[row][col].config(text='X', fg='blue')  # Update button display
         
+        # Immediately disable the board to prevent fast-clicking
+        self.disable_board()  # Prevent multiple moves by disabling all buttons
+        
         # Check if player won
         if self.game.check_winner('X'):  # Check if player's move resulted in a win
             self.update_status("Congratulations! You won!", "green")  # Show win message
             self.game_active = False  # Disable further moves
-            self.disable_all_buttons()  # Prevent additional button clicks
+            # Note: Board remains disabled since game is over
             return  # Exit since game is over
         
         # Check if game is a draw
         if self.game.is_draw():  # Check if the board is full with no winner
             self.update_status("It's a draw! Good game!", "purple")  # Show draw message
             self.game_active = False  # Disable further moves
-            self.disable_all_buttons()  # Prevent additional button clicks
+            # Note: Board remains disabled since game is over
             return  # Exit since game is over
         
         # If game continues, trigger AI move
@@ -184,17 +217,18 @@ class TicTacToeGUI:
         if self.game.check_winner('O'):  # Check if AI's move resulted in a win
             self.update_status("AI wins! Better luck next time!", "red")  # Show AI win message
             self.game_active = False  # Disable further moves
-            self.disable_all_buttons()  # Prevent additional button clicks
+            # Note: Board remains disabled since game is over
             return  # Exit since game is over
         
         # Check if game is a draw
         if self.game.is_draw():  # Check if the board is full with no winner
             self.update_status("It's a draw! Good game!", "purple")  # Show draw message
             self.game_active = False  # Disable further moves
-            self.disable_all_buttons()  # Prevent additional button clicks
+            # Note: Board remains disabled since game is over
             return  # Exit since game is over
         
-        # Game continues - player's turn
+        # Game continues - re-enable board for player's turn
+        self.enable_board()  # Re-enable only empty cells for player's next move
         self.update_status("Your turn! Make your move.", "green")  # Prompt player for next move
     
     def update_status(self, message, color="black"):

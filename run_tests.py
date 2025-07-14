@@ -110,28 +110,34 @@ def run_tests_in_module(module, module_name):
     for name in dir(module):  # Iterate through all names in the module again
         obj = getattr(module, name)  # Get the object
         if (isinstance(obj, type) and name.startswith('Test')):  # Check if it's a test class
-            try:
-                test_instance = obj()  # Create instance of test class
-                
-                # Run setup if it exists
-                if hasattr(test_instance, 'setup_method'):  # Check for setup method
-                    test_instance.setup_method()  # Run setup before tests
-                
-                # Run all test methods in the class
-                for method_name in dir(test_instance):  # Iterate through class methods
-                    if method_name.startswith('test_'):  # Check if method is a test
-                        test_method = getattr(test_instance, method_name)  # Get the method
-                        total += 1  # Increment total test count
-                        if run_test_function(test_method, f"{module_name}.{name}.{method_name}"):  # Run test
-                            passed += 1  # Increment passed count if successful
-                
-                # Run teardown if it exists
-                if hasattr(test_instance, 'teardown_method'):  # Check for teardown method
-                    test_instance.teardown_method()  # Run cleanup after tests
+            # Get all test methods first
+            test_methods = []  # Initialize list for test methods
+            for method_name in dir(obj):  # Iterate through class methods
+                if method_name.startswith('test_'):  # Check if method is a test
+                    test_methods.append(method_name)  # Add to test methods list
+            
+            # Run each test method with a fresh instance for proper isolation
+            for method_name in test_methods:  # Iterate through test methods
+                try:
+                    test_instance = obj()  # Create fresh instance for each test
                     
-            except Exception as e:  # Catch any setup/teardown errors
-                print(f"💥 {module_name}.{name} - CLASS ERROR: {e}")  # Report class-level error
-                total += 1  # Count as one failed test
+                    # Run setup if it exists
+                    if hasattr(test_instance, 'setup_method'):  # Check for setup method
+                        test_instance.setup_method()  # Run setup before test
+                    
+                    # Run the specific test method
+                    test_method = getattr(test_instance, method_name)  # Get the test method
+                    total += 1  # Increment total test count
+                    if run_test_function(test_method, f"{module_name}.{name}.{method_name}"):  # Run test
+                        passed += 1  # Increment passed count if successful
+                    
+                    # Run teardown if it exists
+                    if hasattr(test_instance, 'teardown_method'):  # Check for teardown method
+                        test_instance.teardown_method()  # Run cleanup after test
+                        
+                except Exception as e:  # Catch any setup/teardown errors
+                    print(f"💥 {module_name}.{name}.{method_name} - SETUP/TEARDOWN ERROR: {e}")  # Report error
+                    total += 1  # Count as one failed test
     
     return passed, total  # Return test results
 

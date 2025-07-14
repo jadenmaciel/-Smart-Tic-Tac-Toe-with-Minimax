@@ -1,0 +1,17 @@
+# Smart Tic-Tac-Toe Requirements
+# 
+# This project uses only Python standard library modules for the core functionality.
+# Additional dependencies below are optional for enhanced development experience.
+
+# Testing framework (optional - project includes custom test runner)
+pytest>=7.0.0
+
+# Code formatting and linting (optional for development)
+black>=22.0.0
+flake8>=5.0.0
+
+# GUI testing (optional for advanced GUI testing)
+pytest-qt>=4.0.0
+
+# Note: The game can run with just Python 3.x standard library
+# No additional dependencies are required for basic functionality 

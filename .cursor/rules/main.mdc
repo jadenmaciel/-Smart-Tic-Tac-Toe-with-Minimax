@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**Context & Project Files:**
+
+Before taking any action, you must be fully aware of the following project-level documents. Read them at the start of every session and refer to them continuously.
+
+* `@PLANNING.md`: The master guide for architecture, style, and project conventions.
+* `@TASK.md`: The list of current and pending tasks.
+* `@README.md`: The main project documentation.
+* `@tests/`: The directory containing all project tests.
+
+**Core Directive: Document and Comment Everything**
+
+This is your most important rule. You must comment on literally every single line of code you write or modify. There are no exceptions.
+
+1.  **Mandatory Line-by-Line Commenting:** For every line of code, you *must* add a `#` comment *after* the code on the same line (for single-line statements) or on the line *directly above* (for multi-line blocks like function definitions or conditionals).
+2.  **The "Why," Not Just the "What":** Your comments should explain the *purpose* and *reasoning* behind the code. Do not simply restate what the code does.
+    * **Bad:** `# This is a for loop`
+    * **Good:** `# Iterate through the user list to find active subscribers`
+3.  **Complex Logic Explanation:** For any complex algorithms, business logic, or non-obvious code blocks, you must add a multi-line `# Reason:` comment block above the code explaining the approach, trade-offs, and expected outcome.
+
+**Step-by-Step Workflow:**
+
+1.  **Consult `PLANNING.md`:** Always start by reading `@PLANNING.md` to internalize the project's architecture, naming conventions, and coding style. Adhere to it religiously.
+2.  **Consult `TASK.md`:**
+    * Before starting, check `@TASK.md`. If your current task is not there, add it with a description and today's date.
+    * As you work, if you discover new sub-tasks or necessary refactors, add them to `@TASK.md` under a "Discovered During Work" section.
+    * Upon completion, immediately mark the task as done in `@TASK.md`.
+3.  **Code Generation & Modification:**
+    * **File Length:** Never allow a file to exceed 500 lines. If it's approaching this limit, your immediate task is to refactor it into smaller, well-defined modules.
+    * **Modularity:** Group all code into distinct modules based on features or responsibilities. Use clear and relative imports within packages.
+    * **Update `README.md`:** If you add a new feature, change a dependency, or alter the setup process, you must update the `@README.md` immediately.
+4.  **Testing & Verification:**
+    * **Create Pytest Unit Tests:** All new features (functions, classes, routes) require a corresponding unit test file in the `@tests/` directory, mirroring the application's structure.
+    * **Update Existing Tests:** If you modify logic, you must check if existing tests are affected and update them accordingly.
+    * **Test Coverage:** Every new feature must have at least three tests:
+        1.  A test for the expected, "happy path" use case.
+        2.  A test for a known edge case.
+        3.  A test for an expected failure or error condition.
+
+**AI Behavior & Constraints:**
+
+* **No Assumptions:** If any instruction is unclear or you lack context, you must ask clarifying questions. Never proceed with assumptions.
+* **Verify Everything:** Never hallucinate libraries, functions, or file paths. Before writing code that uses a module or references a file, confirm that it exists.
+* **Be Explicit:** Never delete or overwrite code unless the task in `@TASK.md` explicitly instructs you to do so.
+
+**Verification of Your Work:**
+
+* Every line of code you output must have a corresponding `#` comment.
+* Project documentation (`@README.md`, `@TASK.md`) must be up-to-date with your changes.
+* All new code must be accompanied by passing unit tests.
